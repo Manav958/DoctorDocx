@@ -86,7 +86,7 @@ async function fetchOldChats() {
         if (data.chats && Array.isArray(data.chats)) {
             data.chats.forEach((chatId) => {
                 const chatLink = document.createElement('a');
-                chatLink.href = "javascript:void(0)";
+                chatLink.href = `/get_chat_history/${chatId}`;
                 chatLink.textContent = `Chat ${chatId}`;
                 chatLink.onclick = () => loadChatContent(chatId);
                 oldChatsList.appendChild(chatLink);
