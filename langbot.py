@@ -176,9 +176,9 @@ async def get_chat_history(session_id):
     )
     #x=specific_history.URL/get/specific_history.session_id
     # Get the stored messages
-    print(dir(specific_history))
+    
     messages = specific_history.redis_client.lrange(session_id,start=0,stop=-1)
-    print(messages)
+    
     
     
     # Return the formatted messages as a JSON response
