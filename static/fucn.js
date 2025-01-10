@@ -86,9 +86,9 @@ async function fetchOldChats() {
         if (data.chats && Array.isArray(data.chats)) {
             data.chats.forEach((chatId) => {
                 const chatLink = document.createElement('a');
-                chatLink.href = `/get_chat_history/${chatId}`;
+                chatLink.href = "#"; // Prevent direct navigation
                 chatLink.textContent = `Chat ${chatId}`;
-                chatLink.onclick = () => loadChatContent(chatId);
+                chatLink.onclick = () => loadChatContent(chatId); // Fetch content dynamically
                 oldChatsList.appendChild(chatLink);
             });
         } else {
@@ -99,24 +99,30 @@ async function fetchOldChats() {
     }
 }
 
-// Function to load the content of a selected chat
+
 // Function to load the content of a selected chat
 function loadChatContent(sessionId) {
+    // Prevent direct navigation to the link
+    event.preventDefault();
+
     // Clear the current chat history area
-    chatHistory.innerHTML = '';
+    chatHistory.innerHTML = '<p>Loading chat...</p>';
 
     // Fetch the chat history from the server based on sessionId
     fetch(`/get_chat_history/${sessionId}`)
         .then(response => response.json())
         .then(data => {
-            
+            chatHistory.innerHTML = ''; // Clear the "Loading" message
+
             if (data.messages && data.messages.length > 0) {
                 // Loop through the messages and display them in the chat history
                 data.messages.forEach(msg => {
-                    msg = JSON.parse(msg)
-                    //console.log(msg)
+                    msg = JSON.parse(msg); // Parse each message JSON
                     const messageDiv = document.createElement('div');
-                    messageDiv.classList.add("message", msg.type === "human" ? "you" : "ai");
+                    messageDiv.classList.add(
+                        "message",
+                        msg.type === "human" ? "user" : "bot"
+                    );
                     messageDiv.textContent = `${msg.type}: ${msg.data.content}`;
                     chatHistory.appendChild(messageDiv);
                 });

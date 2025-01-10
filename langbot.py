@@ -168,21 +168,21 @@ def get_chats():
 
 @app.route('/get_chat_history/<session_id>', methods=['GET'])
 async def get_chat_history(session_id):
-    # Retrieve messages for the specific session from Redis
-    specific_history = UpstashRedisChatMessageHistory(
-        url=URL,
-        token=TOKEN,
-        session_id=session_id
-    )
-    #x=specific_history.URL/get/specific_history.session_id
-    # Get the stored messages
-    
-    messages = specific_history.redis_client.lrange(session_id,start=0,stop=-1)
-    
-    
-    
-    # Return the formatted messages as a JSON response
-    return jsonify({"messages": messages})
+    try:
+        # Retrieve messages for the specific session from Redis
+        specific_history = UpstashRedisChatMessageHistory(
+            url=URL,
+            token=TOKEN,
+            session_id=session_id
+        )
+        messages = specific_history.redis_client.lrange(session_id, start=0, stop=-1)
+        
+        # Return the formatted messages as a JSON response
+        return jsonify({"messages": messages})
+    except Exception as e:
+        print(f"Error fetching chat history: {e}")
+        return jsonify({"error": "Failed to fetch chat history"}), 500
+
 
 
 
