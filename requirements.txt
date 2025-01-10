@@ -5,3 +5,4 @@ langchain_core==0.3.29
 langchain_openai==0.2.14
 python-dotenv==1.0.1
 upstash_redis==1.2.0
+beautifulsoup4
