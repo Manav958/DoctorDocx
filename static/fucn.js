@@ -114,7 +114,7 @@ function loadChatContent(sessionId) {
                 // Loop through the messages and display them in the chat history
                 data.messages.forEach(msg => {
                     msg = JSON.parse(msg)
-                    console.log(msg)
+                    //console.log(msg)
                     const messageDiv = document.createElement('div');
                     messageDiv.classList.add("message", msg.type === "human" ? "you" : "ai");
                     messageDiv.textContent = `${msg.type}: ${msg.data.content}`;
