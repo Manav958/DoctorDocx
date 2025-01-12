@@ -75,6 +75,7 @@ function createNewChat() {
 }
 
 
+
 // Function to load old chats from the server
 async function fetchOldChats() {
     try {
@@ -139,6 +140,7 @@ function loadChatContent(sessionId) {
             alert("Failed to load chat history. Please try again.");
         });
 }
+
 
 
 // Function to format responses with code block

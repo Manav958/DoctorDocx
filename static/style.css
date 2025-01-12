@@ -383,3 +383,26 @@ code {
     margin-right: -10%;
     display: flex;
 }
+
+
+
+#long-button {
+    height: 300px;
+    width: 30px;
+    background: linear-gradient(225deg, rgba(57, 236, 236, 0.716), rgb(9, 225, 74));
+    
+    justify-content: center; 
+    align-items: center; 
+    writing-mode: vertical-lr; 
+    text-orientation: mixed; 
+    font-size: 16px; 
+    font-weight: bold; 
+    color: #ffffff; 
+    border: 1px solid black;
+    border-radius: 0px 10px 10px 0px; 
+    cursor: pointer;
+    transform: rotate(0deg); 
+    text-decoration: none; 
+    box-shadow: 0 2px 8px rgba(26, 232, 122, 0.5);
+}
+

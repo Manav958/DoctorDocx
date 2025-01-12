@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload PDF</title>
+    <link rel="stylesheet" href="../static/pdf.css">
+</head>
+<body>
+    <div class="form-container">
+        <form id="uploadForm" enctype="multipart/form-data" method="post" action="/upload_pdf">
+            <h1>Upload PDF</h1>
+            <label for="file" class="custom-file-upload">
+                <input type="file" id="file" name="file" accept=".pdf">
+                Choose a PDF
+            </label>
+            <button type="submit" class="upload-button">Upload PDF</button>
+        </form>
+    </div>
+</body>
+</html>

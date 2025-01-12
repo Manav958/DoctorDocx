@@ -1,0 +1,104 @@
+/* General Reset */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #808381, #000000);
+    color: #333;
+    background-image: url("photo5.jpg");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+/* Form Container */
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Form Styling */
+form {
+    background: linear-gradient(135deg, rgba(123, 124, 123, 0.8), rgba(0, 0, 0, 0.8)); /* Transparent black-to-green gradient */
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(9, 225, 164, 0.662);
+    padding: 25px 35px;
+    max-width: 450px;
+    width: 100%;
+    text-align: center;
+    color: #0c0808; /* Text color */
+    backdrop-filter: blur(10px); /* Glassmorphism effect */
+}
+
+form h1 {
+    margin-bottom: 20px;
+    font-size: 28px;
+    color: #32fc97; /* Bright green text for the heading */
+    font-weight: bold;
+    text-shadow: 0 2px 4px rgba(50, 252, 151, 0.5);
+}
+
+/* File Upload Styling */
+.custom-file-upload {
+    display: inline-block;
+    background-color: rgba(255, 255, 255, 0.1); /* Transparent button */
+    color: #ffffff; /* Bright green text */
+    border: 2px solid #32fc97;
+    border-radius: 8px;
+    padding: 12px 25px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.custom-file-upload:hover {
+    background: linear-gradient(135deg, #6c6c6c, #040404);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(18, 255, 172, 0.721);
+    color: white;
+}
+
+.custom-file-upload input[type="file"] {
+    display: none;
+}
+
+/* Button Styling */
+.upload-button {
+    margin-top: 20px;
+    padding: 12px 25px;
+    background: linear-gradient(135deg, #32fc97, #00cc66);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+    box-shadow: 0 4px 8px rgba(50, 252, 151, 0.4);
+}
+
+.upload-button:hover {
+    background: linear-gradient(135deg, #6c6c6c, #040404);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(18, 255, 172, 0.721);
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    form {
+        padding: 20px 25px;
+    }
+
+    form h1 {
+        font-size: 22px;
+    }
+
+    .custom-file-upload, .upload-button {
+        width: 100%;
+        font-size: 15px;
+    }
+}

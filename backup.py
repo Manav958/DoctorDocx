@@ -1,62 +1,93 @@
 from imports import *
 
+# Load environment variables
 load_dotenv()
+
 app = Flask(__name__)
+
+# Upstash Redis Configuration
 URL = os.getenv("URL")
 TOKEN = os.getenv("TOKEN")
 history = UpstashRedisChatMessageHistory(
     url=URL,
     token=TOKEN,
     session_id="chat1",
-    ttl=86400 
+    ttl=86400  # Unique session ID for persistent memory
 )
+
+# Memory setup for permanent storage (no TTL)
 memory = ConversationBufferMemory(
     memory_key="chat_history",
     return_messages=True,
     chat_memory=history,
 )
-uploaded_pdfs = []
+
+# Function to load and process the PDF
 def load_and_process_pdf(pdf_path):
+    # Load PDF using Langchain's PyPDFLoader
     loader = PyPDFLoader(pdf_path)
     documents = loader.load()
+
+    # Extract text from the documents
     pdf_text = "\n".join([doc.page_content for doc in documents])
+
+    # Split text by bullet points (assuming common bullet symbols like '-', '*', '•')
     bullet_point_pattern = r"(\n?[-•*]\s)"
     sections = re.split(bullet_point_pattern, pdf_text)
+
+    # Filter empty sections and strip spaces
     bullet_sections = [section.strip() for section in sections if section.strip()]
+
     return bullet_sections
-def create_vector_store_from_pdfs(pdf_paths):
-    sections = []
-    for pdf_path in pdf_paths:
-        sections.extend(load_and_process_pdf(pdf_path))
+
+# Function to create a vector store (FAISS index) from the PDF content
+def create_vector_store_from_pdf(pdf_path):
+    # Load and process the PDF, splitting it by bullet points
+    sections = load_and_process_pdf(pdf_path)
+
+    # Create embeddings for the split sections
     embeddings = OpenAIEmbeddings()
+
+    # Store sections in a FAISS index
     index = FAISS.from_texts(sections, embeddings)
+
     return index
+
+# Initialize the bot and chain
 def create_chain(vectorStore):
     model = ChatOpenAI(model="gpt-3.5-turbo-1106", temperature=0.4)
+
     prompt = ChatPromptTemplate.from_messages([
         ("system", "Answer the user's questions based on the context: {context}"),
         ("human", "{input}")
     ])
+
     chain = create_stuff_documents_chain(
         llm=model,
         prompt=prompt
     )
+
     retriever = vectorStore.as_retriever(search_kwargs={"k": 3})
+
     return chain, retriever
+
+# Function to process chat and get response
 def process_chat(chain, retriever, question, chat_history):
+    # Get response from the chain
     response = chain.invoke({
         "input": question,
         "chat_history": chat_history,
         "context": retriever.get_relevant_documents(question)
     })
+    
+    # Check if response is a string or dictionary
     if isinstance(response, dict):
         return response.get('output', '')
     else:
-        return response
+        return response  # Return the string directly
 
-# Routes
-#_______________________________________________________________________________
 
+# Web App Routes
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -71,68 +102,46 @@ def ask():
 
 @app.route('/new_chat', methods=['POST'])
 def new_chat():
+    # Generate a unique session ID
     new_session_id = str(uuid.uuid4())
+    
+    # Initialize a new session in Redis
     new_history = UpstashRedisChatMessageHistory(
         url=URL,
         token=TOKEN,
         session_id=new_session_id,
-        ttl=86400
+        ttl=86400  # Optional: Set TTL for new chat session
     )
+    
     memory.chat_memory = new_history
     return jsonify({"session_id": new_session_id, "message": "New chat session created!"})
 
 @app.route('/get_chats', methods=['GET'])
 def get_chats():
-    keys = history.redis_client.keys('*') 
-    chat_keys = [key for key in keys] 
+    keys = history.redis_client.keys('*')  # Use Upstash Redis client
+    chat_keys = [key for key in keys]  # Decode keys to string
     return jsonify({"chats": chat_keys})
 
 @app.route('/get_chat_history/<session_id>', methods=['GET'])
 async def get_chat_history(session_id):
     try:
+        # Retrieve messages for the specific session from Redis
         specific_history = UpstashRedisChatMessageHistory(
             url=URL,
             token=TOKEN,
             session_id=session_id
         )
         messages = specific_history.redis_client.lrange(session_id, start=0, stop=-1)
+        
+        # Return the formatted messages as a JSON response
         return jsonify({"messages": messages})
     except Exception as e:
         print(f"Error fetching chat history: {e}")
         return jsonify({"error": "Failed to fetch chat history"}), 500
 
-
-@app.route('/pdf')
-def pdf():
-    return render_template('pdf.html')
-@app.route('/upload_pdf', methods=['POST'])
-def upload_pdf():
-    file = request.files['file']
-    if file.filename == '':
-        return jsonify({"error": "No selected file"}), 400
-    if file and file.filename.endswith('.pdf'):
-        upload_path = os.path.join("uploads", file.filename)
-        file.save(upload_path)
-        uploaded_pdfs.append(upload_path)
-        global vector_store, chain, retriever
-        vector_store = create_vector_store_from_pdfs(uploaded_pdfs)
-        chain, retriever = create_chain(vector_store)
-        return jsonify({"message": f"PDF '{file.filename}' uploaded and processed successfully!"})
-    return jsonify({"error": "Invalid file type"}), 400
-
-
-initial_pdfs = [
-    "C:\\LANGBOT\\uploads\\part1.pdf",
-    "C:\\LANGBOT\\uploads\\part2.pdf",
-    "C:\\LANGBOT\\uploads\\part3.pdf",
-    "C:\\LANGBOT\\uploads\\part4.pdf",
-    "C:\\LANGBOT\\uploads\\part5.pdf",
-    "C:\\LANGBOT\\uploads\\part6.pdf",
-    "C:\\LANGBOT\\uploads\\part7.pdf",
-    "C:\\LANGBOT\\uploads\\part8.pdf"
-]
-uploaded_pdfs.extend(initial_pdfs)
-vector_store = create_vector_store_from_pdfs(uploaded_pdfs)
+# Initialize the PDF processing and FAISS index
+pdf_path = "C:\\LANGBOT\\uploads\\part2.pdf"  # Replace with the path to your PDF
+vector_store = create_vector_store_from_pdf(pdf_path)
 chain, retriever = create_chain(vector_store)
 
 if __name__ == '__main__':
