@@ -111,7 +111,7 @@ def upload_pdf():
     if file.filename == '':
         return jsonify({"error": "No selected file"}), 400
     if file and file.filename.endswith('.pdf'):
-        upload_path = os.path.join("uploads", file.filename)
+        upload_path = os.path.join("static/pdfs", file.filename)
         file.save(upload_path)
         uploaded_pdfs.append(upload_path)
         global vector_store, chain, retriever
@@ -122,14 +122,14 @@ def upload_pdf():
 
 
 initial_pdfs = [
-    "C:\\LANGBOT\\uploads\\part1.pdf",
-    "C:\\LANGBOT\\uploads\\part2.pdf",
-    "C:\\LANGBOT\\uploads\\part3.pdf",
-    "C:\\LANGBOT\\uploads\\part4.pdf",
-    "C:\\LANGBOT\\uploads\\part5.pdf",
-    "C:\\LANGBOT\\uploads\\part6.pdf",
-    "C:\\LANGBOT\\uploads\\part7.pdf",
-    "C:\\LANGBOT\\uploads\\part8.pdf"
+    "static\\pdfs\\part1.pdf",
+    "static\\pdfs\\part2.pdf",
+    "static\\pdfs\\part3.pdf",
+    "static\\pdfs\\part4.pdf",
+    "static\\pdfs\\part5.pdf",
+    "static\\pdfs\\part6.pdf",
+    "static\\pdfs\\part7.pdf",
+    "static\\pdfs\\part8.pdf"
 ]
 uploaded_pdfs.extend(initial_pdfs)
 vector_store = create_vector_store_from_pdfs(uploaded_pdfs)
