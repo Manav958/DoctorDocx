@@ -122,14 +122,14 @@ def upload_pdf():
 
 
 initial_pdfs = [
-    "static\\pdfs\\part1.pdf",
-    "static\\pdfs\\part2.pdf",
-    "static\\pdfs\\part3.pdf",
-    "static\\pdfs\\part4.pdf",
-    "static\\pdfs\\part5.pdf",
-    "static\\pdfs\\part6.pdf",
-    "static\\pdfs\\part7.pdf",
-    "static\\pdfs\\part8.pdf"
+    "static/pdfs/part1.pdf",
+    "static/pdfs/part2.pdf",
+    "static/pdfs/part3.pdf",
+    "static/pdfs/part4.pdf",
+    "static/pdfs/part5.pdf",
+    "static/pdfs/part6.pdf",
+    "static/pdfs/part7.pdf",
+    "static/pdfs/part8.pdf"
 ]
 uploaded_pdfs.extend(initial_pdfs)
 vector_store = create_vector_store_from_pdfs(uploaded_pdfs)
