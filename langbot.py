@@ -136,4 +136,4 @@ vector_store = create_vector_store_from_pdfs(uploaded_pdfs)
 chain, retriever = create_chain(vector_store)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=False)
