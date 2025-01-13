@@ -406,3 +406,56 @@ code {
     box-shadow: 0 2px 8px rgba(26, 232, 122, 0.5);
 }
 
+:root {
+    --heading-text: "DoctorDocx";
+}
+
+h1::before {
+    content: var(--heading-text);
+}
+
+/* Media query for responsiveness */
+@media (max-width: 768px) {
+    h1{
+        margin-left : -10px;
+        font-size: 85px;
+        
+    }
+    :root {
+        --heading-text: "DDocx";
+    }
+    /* Make the left and right buttons responsive */
+    .right-buttons-container button,
+    .left-buttons-container button {
+        margin-right: 153%;
+        margin-top: 520%;
+        padding-right: 9px;
+        padding-left: 9px;
+        
+    }
+
+    
+
+    .right-buttons-container {
+        margin-right: 25px;
+        margin-top: 4%;
+        margin-left: 0px;
+        margin-bottom: 9px;
+        
+    }
+
+    .left-buttons-container {
+        margin-left: 5%;
+        margin-bottom: 7px;
+    }
+}
+
+/* Further adjustments for very small screens */
+@media (max-width: 480px) {
+    .chat-container {
+        width: 95%;
+        height: 75vh; /* Reduce height for smaller screens */
+    }
+
+    
+}
